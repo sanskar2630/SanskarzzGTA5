@@ -1,14 +1,25 @@
 <!doctype html>
 <html lang="en">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Download, install, and troubleshoot the PlayGTA5 local browser snapshot on Windows and Mac.">
-<title>PlayGTA5 · Downloads & help</title>
+<meta name="description" content="Setup instructions, downloads and troubleshooting for the community-hosted GTA V browser experience from Sanskar Studios. Not affiliated with Rockstar Games or Take-Two.">
+<meta name="application-name" content="Sanskar Studios">
+<meta name="theme-color" content="#171421">
+<link rel="canonical" href="https://sanskar2630.online/help/">
+<link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sanskar Studios">
+<meta property="og:title" content="GTA V Browser Help & Downloads | Sanskar Studios">
+<meta property="og:description" content="Setup instructions, downloads and troubleshooting for the community-hosted GTA V browser experience.">
+<meta property="og:image" content="https://sanskar2630.online/sanskar-studios-logo.png">
+<title>GTA V Browser Help & Downloads | Sanskar Studios</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f1eb;color:#182621;font:17px/1.65 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:36px 28px 80px}header{border-bottom:1px solid #c9d1c8;padding-bottom:20px;display:flex;justify-content:space-between;gap:20px}a{color:#15563b;text-underline-offset:4px}h1{font-size:clamp(42px,7vw,76px);line-height:1.04;letter-spacing:-.055em;max-width:850px;margin:65px 0 24px}h2{font-size:27px;letter-spacing:-.025em}p{max-width:750px}.label{font-size:13px;letter-spacing:.1em;text-transform:uppercase}.button{display:inline-block;background:#164b38;color:white;border-radius:5px;padding:13px 22px;text-decoration:none;margin:14px 15px 20px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin:40px 0}section{border-top:1px solid #c9d1c8;padding:22px 0}li{margin:12px 0}pre{padding:18px;background:#e5e9e1;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}code{overflow-wrap:anywhere}footer{font-size:14px;color:#526257;margin-top:38px}@media(max-width:650px){.columns{grid-template-columns:1fr;gap:20px}h1{margin-top:42px}header{font-size:14px}}
+*{box-sizing:border-box}body{margin:0;background:#f3f1eb;color:#182621;font:17px/1.65 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:36px 28px 80px}header{border-bottom:1px solid #c9d1c8;padding-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand-lockup{display:inline-flex;align-items:center}.brand-lockup img{display:block;width:min(260px,55vw);height:auto;max-height:120px;object-fit:contain}a{color:#15563b;text-underline-offset:4px}h1{font-size:clamp(42px,7vw,76px);line-height:1.04;letter-spacing:-.055em;max-width:850px;margin:65px 0 24px}h2{font-size:27px;letter-spacing:-.025em}p{max-width:750px}.label{font-size:13px;letter-spacing:.1em;text-transform:uppercase}.button{display:inline-block;background:#164b38;color:white;border-radius:5px;padding:13px 22px;text-decoration:none;margin:14px 15px 20px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin:40px 0}section{border-top:1px solid #c9d1c8;padding:22px 0}li{margin:12px 0}pre{padding:18px;background:#e5e9e1;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}code{overflow-wrap:anywhere}footer{font-size:14px;color:#526257;margin-top:38px}@media(max-width:650px){.columns{grid-template-columns:1fr;gap:20px}h1{margin-top:42px}header{font-size:14px}}
 </style>
+</head>
 <main>
-<header><strong>PLAYGTA5</strong><a href="https://github.com/alihammoud21/playgta5">Repository & support ↗</a></header>
+<header><a class="brand-lockup" href="/" aria-label="Sanskar Studios home"><img src="/sanskar-studios-logo.png" alt="Sanskar Studios GTA V logo"></a><a href="https://github.com/alihammoud21/playgta5">Repository & support ↗</a></header>
 <h1>Your browser.<br>Your machine.<br>Start here.</h1>
 <p>The local browser-game snapshot, with download instructions and help for Windows and Mac. The complete game data is about <strong>21.2 GB</strong>; allow at least <strong>25 GB of free space</strong>.</p>
 <p><strong>Play directly in your browser:</strong> open the game below in current Chrome or Edge with graphics acceleration enabled. The first load downloads game data as needed and can take several minutes. You can also install a local copy using the instructions here.</p>
@@ -22,5 +33,5 @@ bash Launch-Local.command</pre><p>Use current Chrome or Edge. Apple Silicon and 
 </div>
 <section><p class="label">03 / Troubleshooting</p><h2>Sound and map, but a black world?</h2><p>After starting the local server, try <a href="http://localhost:8000/?low=1&amp;fps=30&amp;res=1280x720">lower-memory mode at 720p / 30 FPS</a>. Close other game tabs and GPU-heavy apps. Verify the game files, then collect browser-console errors if it persists.</p><p><a href="https://github.com/alihammoud21/playgta5/issues/2">Black-screen support thread ↗</a> &nbsp; <a href="https://github.com/alihammoud21/playgta5/issues/1">Graphics-device-lost support thread ↗</a></p><p>In the updated installer, the <a href="http://localhost:8000/__support/">local compatibility page</a> produces a report you can review and share. Local links work only while your server is running.</p></section>
 <section><h2>Already installed?</h2><p>Keep your existing game files. Download the latest installer ZIP and copy its helper files and <code>support</code> folder into your existing installation, replacing the older helpers. Then run the launcher. Do not re-extract the old release helpers over the update.</p><p>The original release archives remain unchanged. <a href="https://github.com/alihammoud21/playgta5#readme">Read the full installation and troubleshooting guide ↗</a>.</p></section>
-<footer>This is a compiled client snapshot, not the original engine source. Not affiliated with Rockstar Games or Take-Two. Game assets belong to their respective rights holders.</footer>
+<footer>Website branding and presentation by Sanskar Studios. This is a compiled client snapshot, not the original engine source. Not affiliated with Rockstar Games or Take-Two. Game assets belong to their respective rights holders.</footer>
 </main></html>

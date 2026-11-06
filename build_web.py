@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -29,9 +30,100 @@ def patch_page(code):
     return code.replace(old, new)
 
 
+
+def patch_homepage(code):
+    """Apply Sanskar Studios branding to the generated game homepage."""
+    import re
+
+    if len(re.findall(r"</head\s*>", code, flags=re.IGNORECASE)) > 1:
+        raise ValueError("Unrecognized game page: multiple closing head tags")
+
+    title = "GTA V Browser Experience | Sanskar Studios"
+    description = (
+        "Explore a community-hosted GTA V browser experience, with gameplay modes "
+        "and setup information. Sanskar Studios is an independent website brand and "
+        "is not affiliated with Rockstar Games or Take-Two."
+    )
+
+    # Replace an existing title, or add one to the document head.
+    title_pattern = r"<title\b[^>]*>.*?</title\s*>"
+    if re.search(title_pattern, code, flags=re.IGNORECASE | re.DOTALL):
+        code = re.sub(title_pattern, f"<title>{title}</title>", code, count=1,
+                      flags=re.IGNORECASE | re.DOTALL)
+    else:
+        head_match = re.search(r"<head\b[^>]*>", code, flags=re.IGNORECASE)
+        if not head_match:
+            raise ValueError("Unrecognized game page: missing head element")
+        code = code[:head_match.end()] + f"\n<title>{title}</title>" + code[head_match.end():]
+
+    # Remove prior conflicting SEO / social / icon declarations to avoid duplicates.
+    remove_patterns = [
+        r'<meta\b(?=[^>]*\bname\s*=\s*["\'](?:description|application-name|robots|theme-color|twitter:card|twitter:title|twitter:description)["\'])[^>]*>',
+        r'<meta\b(?=[^>]*\bproperty\s*=\s*["\']og:[^"\']+["\'])[^>]*>',
+        r'<link\b(?=[^>]*\brel\s*=\s*["\'](?:canonical|icon|shortcut icon|apple-touch-icon)["\'])[^>]*>',
+        r'<script\b(?=[^>]*\btype\s*=\s*["\']application/ld\+json["\'])[^>]*>.*?</script\s*>',
+    ]
+    for pattern in remove_patterns:
+        code = re.sub(pattern, "", code, flags=re.IGNORECASE | re.DOTALL)
+
+    metadata = f"""
+<meta name="description" content="{description}">
+<meta name="application-name" content="Sanskar Studios">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#171421">
+<link rel="canonical" href="https://sanskar2630.online/">
+<link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sanskar Studios">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{description}">
+<meta property="og:url" content="https://sanskar2630.online/">
+<meta property="og:image" content="https://sanskar2630.online/sanskar-studios-logo.png">
+<meta name="twitter:image" content="https://sanskar2630.online/sanskar-studios-logo.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{description}">
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Sanskar Studios",
+  "alternateName": "Sanskar2630",
+  "url": "https://sanskar2630.online/"
+}}
+</script>
+"""
+    if re.search(r"</head\s*>", code, flags=re.IGNORECASE):
+        code = re.sub(r"</head\s*>", metadata + "\n</head>", code, count=1, flags=re.IGNORECASE)
+    else:
+        # Some static snapshots omit an explicit head close; add metadata after title.
+        code = re.sub(r"(</title\s*>)", r"\\1" + metadata, code, count=1, flags=re.IGNORECASE)
+    return code
+
 def finish(output):
     page = output / 'index.html'
-    page.write_text(patch_page(page.read_text(encoding='utf-8')), encoding='utf-8', newline='\n')
+    page.write_text(patch_homepage(patch_page(page.read_text(encoding='utf-8'))), encoding='utf-8', newline='\n')
+    # Show the Sanskar Studios logo on the game homepage without intercepting game controls.
+    page_code = page.read_text(encoding='utf-8')
+    brand_overlay = '''
+<style id="sanskar-studios-brand-style">
+#sanskar-studios-brand{position:fixed;z-index:20;top:12px;left:12px;width:min(150px,24vw);max-height:100px;object-fit:contain;opacity:.96;pointer-events:none;filter:drop-shadow(0 2px 8px rgba(0,0,0,.72))}
+@media(max-width:600px){#sanskar-studios-brand{width:min(104px,22vw);top:8px;left:8px}}
+</style>
+<img id="sanskar-studios-brand" src="/sanskar-studios-logo.png" alt="Sanskar Studios" aria-hidden="true">
+'''
+    if 'id="sanskar-studios-brand"' not in page_code:
+        if re.search(r'</body\s*>', page_code, flags=re.IGNORECASE):
+            page_code = re.sub(r"</body\s*>", brand_overlay + "\n</body>", page_code, count=1, flags=re.IGNORECASE)
+        else:
+            page_code += brand_overlay
+    page.write_text(page_code, encoding='utf-8', newline='\n')
+    shutil.copyfile(HERE / 'public' / 'sanskar-studios-logo.png', output / 'sanskar-studios-logo.png')
+    favicon = HERE / 'public' / 'favicon.png'
+    if not favicon.is_file():
+        raise ValueError('Missing branding asset: public/favicon.png')
+    shutil.copyfile(favicon, output / 'favicon.png')
     workers = list((output / 'b').glob('*/io_worker.js'))
     if len(workers) != 1:
         raise ValueError('Expected one versioned I/O worker')
